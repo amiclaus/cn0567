@@ -309,6 +309,8 @@ int32_t cn0567_init(struct cn0567_dev **device)
 	struct cn0567_dev *dev;
 	int8_t i;
 	uint16_t data;
+	uint32_t sw_flash_buffer[63];
+	uint16_t reg_addr, reg_val;
 
 	ret = pwr_setup();
 	if(ret != SUCCESS)
@@ -398,6 +400,97 @@ int32_t cn0567_init(struct cn0567_dev **device)
 	ret = cn0567_calibrate_hfo(dev);
 	if(ret != SUCCESS)
 		goto error_cn;
+
+	/** General configuration */
+	sw_flash_buffer[0]   = 0x00f8000;
+	sw_flash_buffer[1]   = 0x00f0006;
+	sw_flash_buffer[2]   = 0x0000048;
+	sw_flash_buffer[3]   = 0x001000f;
+	sw_flash_buffer[4]   = 0x00d4e20;
+	sw_flash_buffer[5]   = 0x00e0000;
+	sw_flash_buffer[6]   = 0x0100300;
+	/** Optical path 1 */
+	sw_flash_buffer[7]   = 0x1020005;
+	sw_flash_buffer[8]   = 0x1057070;
+	sw_flash_buffer[9]   = 0x1060000;
+	/** Optical path 2 */
+	sw_flash_buffer[10]   = 0x1220050;
+	sw_flash_buffer[11]   = 0x1250000;
+	sw_flash_buffer[12]   = 0x1260030;
+	/** Optical path 3 */
+	sw_flash_buffer[13]   = 0x1420500;
+	sw_flash_buffer[14]   = 0x14580B0;
+	sw_flash_buffer[15]   = 0x1460000;
+	/** Optical path 4 */
+	sw_flash_buffer[16]   = 0x1625000;
+	sw_flash_buffer[17]   = 0x1650000;
+	sw_flash_buffer[18]   = 0x16680B0;
+	/** AFE Path */
+	sw_flash_buffer[19]   = 0x10140DA;
+	sw_flash_buffer[20]   = 0x12140DA;
+	sw_flash_buffer[21]   = 0x14140DA;
+	sw_flash_buffer[22]   = 0x16140DA;
+	/** CH2 enable */
+	sw_flash_buffer[23]   = 0x1004000;
+	sw_flash_buffer[24]   = 0x1204000;
+	sw_flash_buffer[25]   = 0x1404000;
+	sw_flash_buffer[26]   = 0x1604000;
+	/** Precondition PDs to TIA_VREF */
+	sw_flash_buffer[27]   = 0x1031000;
+	sw_flash_buffer[28]   = 0x1231000;
+	sw_flash_buffer[29]   = 0x1431000;
+	sw_flash_buffer[30]   = 0x1631000;
+	/** AFE gain */
+	sw_flash_buffer[31]   = 0x1042A92;
+	sw_flash_buffer[32]   = 0x1242A92;
+	sw_flash_buffer[33]   = 0x1442A92;
+	sw_flash_buffer[34]   = 0x1642A92;
+	/** 1 integrate for every 32 pulses */
+	sw_flash_buffer[35]   = 0x1070120;
+	sw_flash_buffer[36]   = 0x1270120;
+	sw_flash_buffer[37]   = 0x1470120;
+	sw_flash_buffer[38]   = 0x1670120;
+	/** 2us LED pulse with 32us offset */
+	sw_flash_buffer[39]   = 0x1090220;
+	sw_flash_buffer[40]   = 0x1290220;
+	sw_flash_buffer[41]   = 0x1490220;
+	sw_flash_buffer[42]   = 0x1690220;
+	/** 3us AFE width double sided */
+	sw_flash_buffer[43]   = 0x10A0003;
+	sw_flash_buffer[44]   = 0x12A0003;
+	sw_flash_buffer[45]   = 0x14A0003;
+	sw_flash_buffer[46]   = 0x16A0003;
+	/** ~32us integrator offset to line up zero crossing of BPF */
+	sw_flash_buffer[47]   = 0x10B03FC;
+	sw_flash_buffer[48]   = 0x12B03FC;
+	sw_flash_buffer[49]   = 0x14B03FC;
+	sw_flash_buffer[50]   = 0x16B03FC;
+	/** 4 pulse chop */
+	sw_flash_buffer[51]   = 0x10D00AA;
+	sw_flash_buffer[52]   = 0x12D00AA;
+	sw_flash_buffer[53]   = 0x14D00AA;
+	sw_flash_buffer[54]   = 0x16D00AA;
+	/** 2048 digital offset */
+	sw_flash_buffer[55]   = 0x10f8000;
+	sw_flash_buffer[56]   = 0x12f8000;
+	sw_flash_buffer[57]   = 0x14f8000;
+	sw_flash_buffer[58]   = 0x16f8000;
+	/** 4 byte wide data */
+	sw_flash_buffer[59]   = 0x1100004;
+	sw_flash_buffer[60]   = 0x1300004;
+	sw_flash_buffer[61]   = 0x1500004;
+	sw_flash_buffer[62]   = 0x1700004;
+
+	for (i = 0; i < 63; i++) {
+			reg_addr = (sw_flash_buffer[i] & 0xFFFF0000) >> 16;
+			reg_val  = sw_flash_buffer[i] & 0x0000FFFF;
+			ret = adpd410x_reg_write(dev->adpd4100_handler, reg_addr,
+						 reg_val);
+			if (ret != SUCCESS)
+				return FAILURE;
+		}
+
+	*device = dev;
 
 	return ret;
 
