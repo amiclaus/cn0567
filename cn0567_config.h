@@ -63,7 +63,6 @@ struct aducm_spi_init_param aducm_spi_init = {
 	.dma = false,
 	.half_duplex = false,
 	.master_mode = MASTER,
-	.spi_channel = SPI0
 };
 #endif
 
@@ -71,10 +70,12 @@ static struct adpd410x_init_param adpd4100_param = {
 #ifdef ADPD4100_SUPPORT
 		.dev_ops_init = {
 				.spi_phy_init = {
+						.device_id = 0,
 						.max_speed_hz = 1000000,
 						.chip_select = 1,
 						.mode = SPI_MODE_0,
 						.extra = &aducm_spi_init,
+						.platform_ops = NULL
 				},
 		},
 		.dev_type = ADPD4100,
@@ -306,7 +307,7 @@ uint16_t reg_config_default[63][2] = {
 		{0x0145, 0x80B0},
 		{0x0146, 0x0000},
 /** Optical path 4 */
-		{0x0162, 0x0500},
+		{0x0162, 0x5000},
 		{0x0165, 0x0000},
 		{0x0166, 0x80B0},
 /** AFE Path */
@@ -315,10 +316,10 @@ uint16_t reg_config_default[63][2] = {
 		{0x0141, 0x40DA},
 		{0x0161, 0x40DA},
 /** CH2 enable */
-		{0x0100, 0x0000},
-		{0x0120, 0x0000},
-		{0x0140, 0x0000},
-		{0x0160, 0x0000},
+		{0x0100, 0x4000},
+		{0x0120, 0x4000},
+		{0x0140, 0x4000},
+		{0x0160, 0x4000},
 /** Precondition PDs to TIA_VREF */
 		{0x0103, 0x1000},
 		{0x0123, 0x1000},
