@@ -1,5 +1,6 @@
 /***************************************************************************//**
  *   @file   app_config.h
+ *   @brief  Application Configuration file.
  *   @author Antoniu Miclaus (antoniu.miclaus@analog.com)
 ********************************************************************************
  * Copyright 2021(c) Analog Devices, Inc.
@@ -38,7 +39,8 @@
 #ifndef APP_CONFIG_H_
 #define APP_CONFIG_H_
 
-#define ADPD4100_SUPPORT
+/** Choose between ADPD4100/ADPD410x support */
+//#define ADPD4100_SUPPORT
 //#define ADPD4101_SUPPORT
 
 #endif // APP_CONFIG_H_

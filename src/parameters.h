@@ -1,8 +1,9 @@
 /***************************************************************************//**
- *   @file   cn0567.h
- *   @author Andrei Drimbarean (andrei.drimbarean@analog.com)
+ *   @file   parameters.h
+ *   @brief  CN0567 Parameters Definitions.
+ *   @author Antoniu Miclaus (antoniu.miclaus@analog.com)
 ********************************************************************************
- * Copyright 2019(c) Analog Devices, Inc.
+ * Copyright 2021(c) Analog Devices, Inc.
  *
  * All rights reserved.
  *
@@ -36,46 +37,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
 
-#ifndef CN0567_H_
-#define CN0567_H_
+#ifndef PARAMETERS_H_
+#define PARAMETERS_H_
 
 /******************************************************************************/
 /***************************** Include Files **********************************/
 /******************************************************************************/
 
-#include <stdint.h>
-#include "adpd410x.h"
+#include "irq_extra.h"
 
 /******************************************************************************/
 /********************** Macros and Constants Definitions **********************/
 /******************************************************************************/
 
-#define ADPD410X_ACTIVE_TIMESLOTS 4
-#define CN0567_CODE_ODR_DEFAULT	50
+#define UART_DEVICE_ID	0
+#define INTC_DEVICE_ID	0
+#define UART_IRQ_ID		ADUCM_UART_INT_ID
+#define UART_BAUDRATE	115200
 
-/******************************************************************************/
-/*************************** Types Declarations *******************************/
-/******************************************************************************/
-
-/**
- * @struct cn0567_dev
- * @brief Application handler structure
- */
-struct cn0567_dev {
-	/** ADPD device handler */
-	struct adpd410x_dev *adpd4100_handler;
-	/** Chip id */
-	uint16_t chip_id;
-};
-
-/******************************************************************************/
-/************************ Functions Declarations ******************************/
-/******************************************************************************/
-
-/** Initial process of the application. */
-int32_t cn0567_init(struct cn0567_dev **device);
-
-/** Free memory allocated by cn0567_init(). */
-int32_t cn0567_remove(struct cn0567_dev *dev);
-
-#endif /* CN0567_H_ */
+#endif /* PARAMETERS_H_ */

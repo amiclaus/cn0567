@@ -1,8 +1,9 @@
 /***************************************************************************//**
  *   @file   cn0567.c
- *   @author Andrei Drimbarean (andrei.drimbarean@analog.com)
+ *   @brief  CN0567 Source file
+ *   @author Antoniu Miclaus (antoniu.miclaus@analog.com)
 ********************************************************************************
- * Copyright 2019(c) Analog Devices, Inc.
+ * Copyright 2021(c) Analog Devices, Inc.
  *
  * All rights reserved.
  *
@@ -40,11 +41,6 @@
 /***************************** Include Files **********************************/
 /******************************************************************************/
 
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <math.h>
-#include <stdio.h>
 #include "cn0567.h"
 #include "cn0567_config.h"
 #include "error.h"
@@ -53,7 +49,6 @@
 #include "delay.h"
 #include "util.h"
 #include "uart_extra.h"
-#include "power.h"
 #include "irq_extra.h"
 #include "spi_extra.h"
 #include "app_config.h"
@@ -310,10 +305,6 @@ int32_t cn0567_init(struct cn0567_dev **device)
 	int8_t i;
 	uint16_t data;
 
-	ret = pwr_setup();
-	if(ret != SUCCESS)
-		return FAILURE;
-
 	dev = (struct cn0567_dev *)calloc(1, sizeof *dev);
 	if(!dev)
 		return FAILURE;
@@ -329,7 +320,8 @@ int32_t cn0567_init(struct cn0567_dev **device)
 	if(ret != SUCCESS)
 		goto error_cn;
 
-	ret = adpd410x_set_last_timeslot(dev->adpd4100_handler, ADPD410X_ACTIVE_TIMESLOTS - 1);
+	ret = adpd410x_set_last_timeslot(dev->adpd4100_handler,
+					 ADPD410X_ACTIVE_TIMESLOTS - 1);
 	if(ret != SUCCESS)
 		goto error_cn;
 
@@ -400,11 +392,11 @@ int32_t cn0567_init(struct cn0567_dev **device)
 		goto error_cn;
 
 	for (i = 0; i < 63; i++) {
-			ret = adpd410x_reg_write(dev->adpd4100_handler, reg_config_default[i][0],
-							reg_config_default[i][1]);
-			if (ret != SUCCESS)
-				return FAILURE;
-		}
+		ret = adpd410x_reg_write(dev->adpd4100_handler, reg_config_default[i][0],
+					 reg_config_default[i][1]);
+		if (ret != SUCCESS)
+			return FAILURE;
+	}
 
 	*device = dev;
 
