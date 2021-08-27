@@ -284,8 +284,9 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 	},
 };
 
-/** General configuration (Address + Data) */
+/* Register Configuration (address + data) */
 uint16_t reg_config_default[63][2] = {
+	/** General configuration */
 	{0x000f, 0x8000},
 	{0x000f, 0x0006},
 	{0x0000, 0x0048},
