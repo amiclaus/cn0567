@@ -50,7 +50,7 @@
 /******************************************************************************/
 /********************** Macros and Constants Definitions **********************/
 /******************************************************************************/
-#define ADPD410X_ACTIVE_TIMESLOTS 4
+#define ADPD410X_ACTIVE_TIMESLOTS 8
 #define CN0567_CODE_ODR_DEFAULT	50
 
 /******************************************************************************/
@@ -116,19 +116,19 @@ static struct adpd410x_init_param adpd4100_param = {
 static struct adpd410x_timeslot_init ts_init_tab[] = {
 	{
 		.ts_inputs = {
-			.option = ADPD410X_INaCH1_INbCH2,
+			.option = ADPD410X_INaCH1_INbDIS,
 			.pair = ADPD410X_INP12,
 		},
 		.led1 = {
 			.fields = {
 				.led_output_select = ADPD410X_OUTPUT_A,
-				.let_current_select = 0x70,
+				.let_current_select = 0x40,
 			},
 		},
 		.led2 = {
 			.fields = {
 				.led_output_select = ADPD410X_OUTPUT_A,
-				.let_current_select = 0x70,
+				.let_current_select = 0x00,
 			},
 		},
 		.led3 = {
@@ -143,7 +143,7 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 				.let_current_select = 0x00,
 			},
 		},
-		.enable_ch2 = true,
+		.enable_ch2 = false,
 		.precon_option = ADPD410X_TIA_VREF,
 		.afe_trim_opt = ADPD410X_TIA_VREF_1V256,
 		.vref_pulse_opt = ADPD410X_TIA_VREF_1V256,
@@ -158,7 +158,49 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 	},
 	{
 		.ts_inputs = {
-			.option = ADPD410X_INaCH1_INbCH2,
+			.option = ADPD410X_INaDIS_INbCH1,
+			.pair = ADPD410X_INP12,
+		},
+		.led1 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_A,
+				.let_current_select = 0x00,
+			},
+		},
+		.led2 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_A,
+				.let_current_select = 0x40,
+			},
+		},
+		.led3 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_A,
+				.let_current_select = 0x00,
+			},
+		},
+		.led4 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_A,
+				.let_current_select = 0x00,
+			},
+		},
+		.enable_ch2 = false,
+		.precon_option = ADPD410X_TIA_VREF,
+		.afe_trim_opt = ADPD410X_TIA_VREF_1V256,
+		.vref_pulse_opt = ADPD410X_TIA_VREF_1V256,
+		.chan2 = ADPD410X_TIA_VREF_50K,
+		.chan1 = ADPD410X_TIA_VREF_100K,
+		.pulse4_subtract = 0xA,
+		.pulse4_reverse = 0xA,
+		.byte_no = 3,
+		.dec_factor = 3,
+		.repeats_no = 32,
+		.adc_cycles = 1,
+	},
+	{
+		.ts_inputs = {
+			.option = ADPD410X_INaCH1_INbDIS,
 			.pair = ADPD410X_INP34,
 		},
 		.led1 = {
@@ -176,7 +218,7 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 		.led3 = {
 			.fields = {
 				.led_output_select = ADPD410X_OUTPUT_A,
-				.let_current_select = 0x30,
+				.let_current_select = 0x40,
 			},
 		},
 		.led4 = {
@@ -185,7 +227,7 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 				.let_current_select = 0x00,
 			},
 		},
-		.enable_ch2 = true,
+		.enable_ch2 = false,
 		.precon_option = ADPD410X_TIA_VREF,
 		.afe_trim_opt = ADPD410X_TIA_VREF_1V256,
 		.vref_pulse_opt = ADPD410X_TIA_VREF_1V256,
@@ -200,13 +242,55 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 	},
 	{
 		.ts_inputs = {
-			.option = ADPD410X_INaCH1_INbCH2,
+			.option = ADPD410X_INaDIS_INbCH1,
+			.pair = ADPD410X_INP34,
+		},
+		.led1 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_A,
+				.let_current_select = 0x00,
+			},
+		},
+		.led2 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_A,
+				.let_current_select = 0x00,
+			},
+		},
+		.led3 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_A,
+				.let_current_select = 0x00,
+			},
+		},
+		.led4 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_A,
+				.let_current_select = 0x40,
+			},
+		},
+		.enable_ch2 = false,
+		.precon_option = ADPD410X_TIA_VREF,
+		.afe_trim_opt = ADPD410X_TIA_VREF_1V256,
+		.vref_pulse_opt = ADPD410X_TIA_VREF_1V256,
+		.chan2 = ADPD410X_TIA_VREF_50K,
+		.chan1 = ADPD410X_TIA_VREF_100K,
+		.pulse4_subtract = 0xA,
+		.pulse4_reverse = 0xA,
+		.byte_no = 3,
+		.dec_factor = 3,
+		.repeats_no = 32,
+		.adc_cycles = 1,
+	},
+	{
+		.ts_inputs = {
+			.option = ADPD410X_INaCH1_INbDIS,
 			.pair = ADPD410X_INP56,
 		},
 		.led1 = {
 			.fields = {
 				.led_output_select = ADPD410X_OUTPUT_B,
-				.let_current_select = 0x30,
+				.let_current_select = 0x40,
 			},
 		},
 		.led2 = {
@@ -217,17 +301,17 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 		},
 		.led3 = {
 			.fields = {
-				.led_output_select = ADPD410X_OUTPUT_A,
+				.led_output_select = ADPD410X_OUTPUT_B,
 				.let_current_select = 0x00,
 			},
 		},
 		.led4 = {
 			.fields = {
-				.led_output_select = ADPD410X_OUTPUT_A,
+				.led_output_select = ADPD410X_OUTPUT_B,
 				.let_current_select = 0x00,
 			},
 		},
-		.enable_ch2 = true,
+		.enable_ch2 = false,
 		.precon_option = ADPD410X_TIA_VREF,
 		.afe_trim_opt = ADPD410X_TIA_VREF_1V256,
 		.vref_pulse_opt = ADPD410X_TIA_VREF_1V256,
@@ -242,25 +326,25 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 	},
 	{
 		.ts_inputs = {
-			.option = ADPD410X_INaCH1_INbCH2,
-			.pair = ADPD410X_INP78,
+			.option = ADPD410X_INaDIS_INbCH1,
+			.pair = ADPD410X_INP56,
 		},
 		.led1 = {
 			.fields = {
-				.led_output_select = ADPD410X_OUTPUT_A,
+				.led_output_select = ADPD410X_OUTPUT_B,
 				.let_current_select = 0x00,
 			},
 		},
 		.led2 = {
 			.fields = {
-				.led_output_select = ADPD410X_OUTPUT_A,
-				.let_current_select = 0x00,
+				.led_output_select = ADPD410X_OUTPUT_B,
+				.let_current_select = 0x40,
 			},
 		},
 		.led3 = {
 			.fields = {
 				.led_output_select = ADPD410X_OUTPUT_B,
-				.let_current_select = 0x30,
+				.let_current_select = 0x00,
 			},
 		},
 		.led4 = {
@@ -269,7 +353,7 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 				.let_current_select = 0x00,
 			},
 		},
-		.enable_ch2 = true,
+		.enable_ch2 = false,
 		.precon_option = ADPD410X_TIA_VREF,
 		.afe_trim_opt = ADPD410X_TIA_VREF_1V256,
 		.vref_pulse_opt = ADPD410X_TIA_VREF_1V256,
@@ -282,6 +366,91 @@ static struct adpd410x_timeslot_init ts_init_tab[] = {
 		.repeats_no = 32,
 		.adc_cycles = 1,
 	},
+	{
+		.ts_inputs = {
+			.option = ADPD410X_INaCH1_INbDIS,
+			.pair = ADPD410X_INP78,
+		},
+		.led1 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_B,
+				.let_current_select = 0x00,
+			},
+		},
+		.led2 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_B,
+				.let_current_select = 0x00,
+			},
+		},
+		.led3 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_B,
+				.let_current_select = 0x40,
+			},
+		},
+		.led4 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_B,
+				.let_current_select = 0x00,
+			},
+		},
+		.enable_ch2 = false,
+		.precon_option = ADPD410X_TIA_VREF,
+		.afe_trim_opt = ADPD410X_TIA_VREF_1V256,
+		.vref_pulse_opt = ADPD410X_TIA_VREF_1V256,
+		.chan2 = ADPD410X_TIA_VREF_50K,
+		.chan1 = ADPD410X_TIA_VREF_100K,
+		.pulse4_subtract = 0xA,
+		.pulse4_reverse = 0xA,
+		.byte_no = 3,
+		.dec_factor = 3,
+		.repeats_no = 32,
+		.adc_cycles = 1,
+	},
+	{
+		.ts_inputs = {
+			.option = ADPD410X_INaDIS_INbCH1,
+			.pair = ADPD410X_INP78,
+		},
+		.led1 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_B,
+				.let_current_select = 0x00,
+			},
+		},
+		.led2 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_B,
+				.let_current_select = 0x00,
+			},
+		},
+		.led3 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_B,
+				.let_current_select = 0x00,
+			},
+		},
+		.led4 = {
+			.fields = {
+				.led_output_select = ADPD410X_OUTPUT_B,
+				.let_current_select = 0x40,
+			},
+		},
+		.enable_ch2 = false,
+		.precon_option = ADPD410X_TIA_VREF,
+		.afe_trim_opt = ADPD410X_TIA_VREF_1V256,
+		.vref_pulse_opt = ADPD410X_TIA_VREF_1V256,
+		.chan2 = ADPD410X_TIA_VREF_50K,
+		.chan1 = ADPD410X_TIA_VREF_100K,
+		.pulse4_subtract = 0xA,
+		.pulse4_reverse = 0xA,
+		.byte_no = 3,
+		.dec_factor = 3,
+		.repeats_no = 32,
+		.adc_cycles = 1,
+	},
+
 };
 
 /* Register Configuration (address + data) */
@@ -293,78 +462,57 @@ uint16_t reg_config_default[63][2] = {
 	{0x0001, 0x000f},
 	{0x000d, 0x4e20},
 	{0x000e, 0x0000},
-	{0x0010, 0x0300},
-	/** Optical path 1 */
-	{0x0102, 0x0005},
-	{0x0105, 0x7070},
-	{0x0106, 0x0000},
-	/** Optical path 2 */
-	{0x0122, 0x0050},
-	{0x0125, 0x0000},
-	{0x0126, 0x0030},
-	/** Optical path 3 */
-	{0x0142, 0x0500},
-	{0x0145, 0x80B0},
-	{0x0146, 0x0000},
-	/** Optical path 4 */
-	{0x0162, 0x5000},
-	{0x0165, 0x0000},
-	{0x0166, 0x80B0},
+	{0x0010, 0x0700},
+
 	/** AFE Path */
 	{0x0101, 0x40DA},
 	{0x0121, 0x40DA},
 	{0x0141, 0x40DA},
 	{0x0161, 0x40DA},
-	/** CH2 enable */
-	{0x0100, 0x4000},
-	{0x0120, 0x4000},
-	{0x0140, 0x4000},
-	{0x0160, 0x4000},
-	/** Precondition PDs to TIA_VREF */
-	{0x0103, 0x1000},
-	{0x0123, 0x1000},
-	{0x0143, 0x1000},
-	{0x0163, 0x1000},
-	/** AFE gain */
-	{0x0104, 0x2A92},
-	{0x0124, 0x2A92},
-	{0x0144, 0x2A92},
-	{0x0164, 0x2A92},
-	/** 1 integrate for every 32 pulses */
-	{0x0107, 0x0120},
-	{0x0127, 0x0120},
-	{0x0147, 0x0120},
-	{0x0167, 0x0120},
+	{0x0181, 0x40DA},
+	{0x01A1, 0x40DA},
+	{0x01C1, 0x40DA},
+	{0x01E1, 0x40DA},
+
 	/** 2us LED pulse with 32us offset */
 	{0x0109, 0x0220},
 	{0x0129, 0x0220},
 	{0x0149, 0x0220},
 	{0x0169, 0x0220},
+	{0x0189, 0x0220},
+	{0x01A9, 0x0220},
+	{0x01C9, 0x0220},
+	{0x01E9, 0x0220},
+
 	/** 3us AFE width double sided */
 	{0x010A, 0x0003},
 	{0x012A, 0x0003},
 	{0x014A, 0x0003},
 	{0x016A, 0x0003},
+	{0x018A, 0x0003},
+	{0x01AA, 0x0003},
+	{0x01CA, 0x0003},
+	{0x01EA, 0x0003},
+
 	/** ~32us integrator offset to line up zero crossing of BPF */
 	{0x010B, 0x03FC},
 	{0x012B, 0x03FC},
 	{0x014B, 0x03FC},
 	{0x016B, 0x03FC},
-	/** 4 pulse chop */
-	{0x010D, 0x00AA},
-	{0x012D, 0x00AA},
-	{0x014D, 0x00AA},
-	{0x016D, 0x00AA},
+	{0x018B, 0x03FC},
+	{0x01AB, 0x03FC},
+	{0x01CB, 0x03FC},
+	{0x01EB, 0x03FC},
+
 	/** 2048 digital offset */
 	{0x010F, 0x8000},
 	{0x012F, 0x8000},
 	{0x014F, 0x8000},
 	{0x016F, 0x8000},
-	/** 4 byte wide data */
-	{0x0110, 0x0004},
-	{0x0130, 0x0004},
-	{0x0150, 0x0004},
-	{0x0170, 0x0004},
+	{0x018F, 0x8000},
+	{0x01AF, 0x8000},
+	{0x01CF, 0x8000},
+	{0x01EF, 0x8000},
 };
 
 #endif /* CN0567_CONFIG_H_ */
