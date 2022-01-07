@@ -64,17 +64,6 @@ int main(int argc, char *argv[])
 	if (IS_ERR_VALUE(ret))
 		return ret;
 
-	ret = adpd410x_set_opmode(cn0567->adpd4100_handler, ADPD410X_GOMODE);
-	if (IS_ERR_VALUE(ret))
-		return ret;
-
-	ret = adpd410x_get_data(cn0567->adpd4100_handler, data);
-	if (IS_ERR_VALUE(ret))
-		return ret;
-
-	ret = adpd410x_set_opmode(cn0567->adpd4100_handler, ADPD410X_STANDBY);
-	if (IS_ERR_VALUE(ret))
-		return ret;
 
 	struct iio_app_device devices[] = {
 		IIO_APP_DEVICE("adpd410x", cn0567->adpd4100_handler,
