@@ -45,6 +45,7 @@
 #include "cn0567_config.h"
 #include "error.h"
 #include "gpio.h"
+#include "aducm3029_gpio.h"
 #include "delay.h"
 #include "util.h"
 
@@ -78,7 +79,9 @@ static int32_t cn0567_calibrate_lfo_set_ts(struct cn0567_dev *dev)
 				&reg_data);
 	if (IS_ERR_VALUE(ret))
 		return ret;
+
 	reg_data |= (1 & BITM_GPIO_CFG_GPIO_PIN_CFG0);
+
 	ret = adpd410x_reg_write(dev->adpd4100_handler, ADPD410X_REG_GPIO_CFG,
 				 reg_data);
 	if (IS_ERR_VALUE(ret))
@@ -89,8 +92,10 @@ static int32_t cn0567_calibrate_lfo_set_ts(struct cn0567_dev *dev)
 				&reg_data);
 	if (IS_ERR_VALUE(ret))
 		return ret;
+
 	reg_data |= ((0 << BITP_GPIO_EXT_TIMESTAMP_GPIO) &
 		     BITM_GPIO_EXT_TIMESTAMP_GPIO);
+
 	return adpd410x_reg_write(dev->adpd4100_handler, ADPD410X_REG_GPIO_EXT,
 				  reg_data);
 }
@@ -140,10 +145,13 @@ static int32_t cn0567_calibrate_lfo_get_timestamp(struct cn0567_dev *dev,
 		return ret;
 
 	mdelay(10);
+
 	ret = gpio_set_value(ts_gpio, GPIO_HIGH);
 	if (IS_ERR_VALUE(ret))
 		return ret;
+
 	mdelay(1);
+
 	ret = gpio_set_value(ts_gpio, GPIO_LOW);
 	if (IS_ERR_VALUE(ret))
 		return ret;
@@ -152,6 +160,7 @@ static int32_t cn0567_calibrate_lfo_get_timestamp(struct cn0567_dev *dev,
 				&reg_data);
 	if (IS_ERR_VALUE(ret))
 		return ret;
+
 	if(reg_data & BITM_OSC32K_CAPTURE_TIMESTAMP)
 		return ret;
 
@@ -159,11 +168,14 @@ static int32_t cn0567_calibrate_lfo_get_timestamp(struct cn0567_dev *dev,
 				&reg_data);
 	if (IS_ERR_VALUE(ret))
 		return ret;
+
 	*ts_val = (reg_data << 16) & 0xFFFF0000;
+
 	ret = adpd410x_reg_read(dev->adpd4100_handler, ADPD410X_REG_STAMP_L,
 				&reg_data);
 	if (IS_ERR_VALUE(ret))
 		return ret;
+
 	*ts_val |= reg_data;
 
 	return SUCCESS;
@@ -190,10 +202,13 @@ static int32_t cn0567_calibrate_lfo(struct cn0567_dev *dev)
 
 	/** Setup platform GPIO for time stamp trigger */
 	ts_param.number = 15;
+	ts_param.platform_ops = &aducm_gpio_ops;
 	ts_param.extra = NULL;
+
 	ret = gpio_get(&ts_gpio, &ts_param);
 	if (IS_ERR_VALUE(ret))
 		return ret;
+
 	ret = gpio_direction_output(ts_gpio, GPIO_LOW);
 	if (IS_ERR_VALUE(ret))
 		return ret;
@@ -204,9 +219,8 @@ static int32_t cn0567_calibrate_lfo(struct cn0567_dev *dev)
 	while (1) {
 		ret = cn0567_calibrate_lfo_get_timestamp(dev, &ts_val_current,
 				ts_gpio);
-		if (IS_ERR_VALUE(ret)) {
+		if (IS_ERR_VALUE(ret))
 			return ret;
-		}
 
 		if(ts_val_current < ts_val_last) {
 			ts_val_last = 0;
@@ -217,9 +231,9 @@ static int32_t cn0567_calibrate_lfo(struct cn0567_dev *dev)
 
 		ret = adpd410x_reg_read(dev->adpd4100_handler, ADPD410X_REG_OSC1M,
 					&reg_data);
-		if (IS_ERR_VALUE(ret)) {
+		if (IS_ERR_VALUE(ret))
 			return ret;
-		}
+
 		cal_value = reg_data & BITM_OSC1M_OSC_1M_FREQ_ADJ;
 		if(ts_val < (10000 - (10000 * 0.005)))
 			cal_value++;
@@ -231,19 +245,19 @@ static int32_t cn0567_calibrate_lfo(struct cn0567_dev *dev)
 			break;
 		if((cal_value == 0) || (cal_value == BITM_OSC1M_OSC_1M_FREQ_ADJ))
 			break;
+
 		reg_data &= ~BITM_OSC1M_OSC_1M_FREQ_ADJ;
 		reg_data |= cal_value & BITM_OSC1M_OSC_1M_FREQ_ADJ;
+
 		ret = adpd410x_reg_write(dev->adpd4100_handler, ADPD410X_REG_OSC1M,
 					 reg_data);
-		if (IS_ERR_VALUE(ret)) {
+		if (IS_ERR_VALUE(ret))
 			return ret;
-		}
 	};
 
 	ret = gpio_remove(ts_gpio);
-	if (IS_ERR_VALUE(ret)) {
+	if (IS_ERR_VALUE(ret))
 		return ret;
-	}
 
 	if(rdy == 1)
 		return SUCCESS;
@@ -266,6 +280,7 @@ int32_t cn0567_calibrate_hfo(struct cn0567_dev *dev)
 				&reg_data);
 	if (IS_ERR_VALUE(ret))
 		return ret;
+
 	reg_data |= BITM_OSC32M_CAL_OSC_32M_CAL_START;
 
 	do {
@@ -280,7 +295,9 @@ int32_t cn0567_calibrate_hfo(struct cn0567_dev *dev)
 				&reg_data);
 	if (IS_ERR_VALUE(ret))
 		return ret;
+
 	reg_data &= ~BITM_OSC1M_OSC_CLK_CAL_ENA;
+
 	return adpd410x_reg_write(dev->adpd4100_handler, ADPD410X_REG_OSC1M,
 				  reg_data);
 }
@@ -304,9 +321,13 @@ int32_t cn0567_init(struct cn0567_dev **device)
 
 	ret = adpd410x_setup(&dev->adpd4100_handler,
 			     &adpd4100_param);
+	if (IS_ERR_VALUE(ret))
+		goto error_cn;
 
 	ret = adpd410x_reg_read(dev->adpd4100_handler, ADPD410X_REG_CHIP_ID,
 				&dev->chip_id);
+	if (IS_ERR_VALUE(ret))
+		goto error_cn;
 
 	ret = adpd410x_set_sampling_freq(dev->adpd4100_handler,
 					 CN0567_CODE_ODR_DEFAULT);
